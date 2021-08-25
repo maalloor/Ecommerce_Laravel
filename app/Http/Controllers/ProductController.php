@@ -15,7 +15,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $data['products'] = Product::paginate(10);
+        $data['products'] = Product::paginate(3);
         return view('product.index',$data);
         
     }
@@ -39,7 +39,32 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $fields = [
+            'name' => 'required|string|max:50',
+            'description' => 'required|string|max:400',
+            'price' => 'required|regex:/^\d*(\.\d{1,2})?$/',
+            'size' => 'required|string|max:1',
+            'category_id' => 'required|regex:/^[1-4]$/'
+        ];
+
+        $message = [
+            'name.required' => 'El nombre del producto es requerido',
+            'description.required' => 'La descripción del producto es requerida',
+            'price.required' => 'El precio del producto es requerido',
+            'price.regex' => 'El formato de precio es incorrecto',
+            'size.required' => 'La talla del producto es requerida',
+            'category_id.required' => 'El id de la categoría del producto es requerida',
+            'category_id.regex' => 'El rango de categorías es de 1 - 4'
+        ];
+
+        if ($request->hasFile('image'))
+        {
+            $fields = ['image' => 'required|max:10000|mimes:PNG,png,jpeg'];
+            $message = ['image.required' => 'La foto del producto es requerida'];
+        }
+        
+        $this->validate($request, $fields, $message);
+
         $product_data = request()->except('_token');
 
         if ($request->hasFile('image'))
@@ -85,6 +110,32 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $fields = [
+            'name' => 'required|string|max:50',
+            'description' => 'required|string|max:400',
+            'price' => 'required|regex:/^\d*(\.\d{1,2})?$/',
+            'size' => 'required|string|max:1',
+            'category_id' => 'required|regex:/^[1-4]$/'
+        ];
+
+        $message = [
+            'name.required' => 'El nombre del producto es requerido',
+            'description.required' => 'La descripción del producto es requerida',
+            'price.required' => 'El precio del producto es requerido',
+            'price.regex' => 'El formato de precio es incorrecto',
+            'size.required' => 'La talla del producto es requerida',
+            'category_id.required' => 'El id de la categoría del producto es requerida',
+            'category_id.regex' => 'El rango de categorías es de 1 - 4'
+        ];
+
+        if ($request->hasFile('image'))
+        {
+            $fields = ['image' => 'required|max:10000|mimes:PNG,png,jpeg'];
+            $message = ['image.required' => 'La foto del producto es requerida'];
+        }
+        
+        $this->validate($request, $fields, $message);
+
         $product_data = request()->except(['_token', '_method']);
 
         if ($request->hasFile('image'))
@@ -96,7 +147,9 @@ class ProductController extends Controller
 
         Product::where('id','=',$id)->update($product_data);
         $product = Product::findOrFail($id);
-        return view('product.edit',compact('product'));
+        //return view('product.edit',compact('product'));
+
+        return redirect('product')->with('mensaje', 'Producto Editado');
     }
 
     /**

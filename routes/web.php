@@ -13,12 +13,24 @@ use App\Http\Controllers\ProductController;
 |
 */
 
+/*
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('product', ProductController::class);
+*/
+Route::get('/', function () {
+    return view('auth.login');
+});
 
 
+Route::resource('product', ProductController::class)->middleware('auth');
 
+Auth::routes();
 
+Route::get('/home', [ProductController::class, 'index'])->name('home');
+
+Route::group(['middleware' => 'auth'], function()
+{
+    Route::get('/', [ProductController::class, 'index'])->name('home');
+});
