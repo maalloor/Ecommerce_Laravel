@@ -13,12 +13,18 @@ use App\Http\Controllers\ProductController;
 |
 */
 
+/*
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('product', ProductController::class);
+*/
+Route::get('/', function () {
+    return view('auth.login');
+});
 
+
+Route::resource('product', ProductController::class)->middleware('auth');
 
 Route::post('/cart-add', 'CartController@add')->name('cart.add');
 
@@ -31,5 +37,11 @@ Route::post('/cart-removeitem', 'CartController@removeitem')->name('cart.removei
 Route::get('/productos', 'FrontController@index');
 
 
+Auth::routes();
 
+Route::get('/home', [ProductController::class, 'index'])->name('home');
 
+Route::group(['middleware' => 'auth'], function()
+{
+    Route::get('/', [ProductController::class, 'index'])->name('home');
+});
