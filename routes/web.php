@@ -20,5 +20,16 @@ Route::get('/', function () {
 Route::resource('product', ProductController::class);
 
 
+Route::post('/cart-add', 'CartController@add')->name('cart.add');
+
+Route::get('/cart-checkout', 'CartController@cart')->name('cart.checkout');
+
+Route::post('/cart-clear', 'CartController@clear')->name('cart.clear');
+
+Route::post('/cart-removeitem', 'CartController@removeitem')->name('cart.removeitem');
+
+Route::get('/productos', 'FrontController@index');
+
+
 
 
