@@ -24,7 +24,7 @@ Route::get('/', function () {
 });
 
 
-Route::resource('product', ProductController::class)->middleware('auth');
+Route::resource('products', ProductController::class)->middleware('auth');
 
 Route::post('/cart-add', 'CartController@add')->name('cart.add');
 
@@ -34,7 +34,7 @@ Route::post('/cart-clear', 'CartController@clear')->name('cart.clear');
 
 Route::post('/cart-removeitem', 'CartController@removeitem')->name('cart.removeitem');
 
-Route::get('/productos', 'FrontController@index');
+Route::get('/products', 'FrontController@index');
 
 
 Auth::routes();

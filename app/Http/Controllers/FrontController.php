@@ -8,7 +8,7 @@ use App\Producto;
 class FrontController extends Controller
 {
     public function index(){
-        $productos = Producto::all();
+        $products = Product::all();
         return view('welcome',compact('productos'));
     }
 }
